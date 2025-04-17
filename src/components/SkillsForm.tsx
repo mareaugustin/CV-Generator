@@ -1,238 +1,215 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { FormSectionProps, Skill, Language } from "@/types";
-import { FormEvent, useState } from "react";
-import { ChipIcon, Plus, Trash2, GripVertical, Languages } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash, Tag } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
+import { Skill, Language, SkillsFormProps } from "@/types";
 
-interface ChipIcon {
-  className: string;
-}
-
-interface SkillsFormProps extends FormSectionProps {
-  initialSkills?: Skill[];
-  initialLanguages?: Language[];
-  onSave: (data: { skills: Skill[]; languages: Language[] }) => void;
-}
+const languageLevels = [
+  { value: "beginner", label: "Débutant" },
+  { value: "intermediate", label: "Intermédiaire" },
+  { value: "advanced", label: "Avancé" },
+  { value: "fluent", label: "Courant" },
+  { value: "native", label: "Natif" }
+];
 
 const SkillsForm = ({ title, initialSkills, initialLanguages, onSave }: SkillsFormProps) => {
   const [skills, setSkills] = useState<Skill[]>(initialSkills || []);
-  const [languages, setLanguages] = useState<Language[]>(
-    initialLanguages || []
-  );
+  const [languages, setLanguages] = useState<Language[]>(initialLanguages || []);
+  const [newSkill, setNewSkill] = useState({ name: "", level: 3 });
+  const [newLanguage, setNewLanguage] = useState({ name: "", level: "intermediate" as const });
 
-  // Compétences
+  // Fonction pour ajouter une nouvelle compétence
   const addSkill = () => {
-    const newSkill: Skill = {
+    if (!newSkill.name.trim()) return;
+    
+    const skill: Skill = {
       id: uuidv4(),
-      name: "",
-      level: 3,
+      name: newSkill.name,
+      level: newSkill.level
     };
-    setSkills([...skills, newSkill]);
+    
+    setSkills([...skills, skill]);
+    setNewSkill({ name: "", level: 3 });
   };
 
-  const updateSkill = (id: string, field: keyof Skill, value: any) => {
-    setSkills(
-      skills.map((skill) =>
-        skill.id === id ? { ...skill, [field]: value } : skill
-      )
-    );
-  };
-
+  // Fonction pour supprimer une compétence
   const removeSkill = (id: string) => {
-    setSkills(skills.filter((skill) => skill.id !== id));
+    setSkills(skills.filter(skill => skill.id !== id));
   };
 
-  // Langues
+  // Fonction pour ajouter une nouvelle langue
   const addLanguage = () => {
-    const newLanguage: Language = {
+    if (!newLanguage.name.trim()) return;
+    
+    const language: Language = {
       id: uuidv4(),
-      name: "",
-      level: "intermediate",
+      name: newLanguage.name,
+      level: newLanguage.level
     };
-    setLanguages([...languages, newLanguage]);
+    
+    setLanguages([...languages, language]);
+    setNewLanguage({ name: "", level: "intermediate" });
   };
 
-  const updateLanguage = (id: string, field: keyof Language, value: any) => {
-    setLanguages(
-      languages.map((lang) =>
-        lang.id === id ? { ...lang, [field]: value } : lang
-      )
-    );
-  };
-
+  // Fonction pour supprimer une langue
   const removeLanguage = (id: string) => {
-    setLanguages(languages.filter((lang) => lang.id !== id));
+    setLanguages(languages.filter(language => language.id !== id));
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  // Fonction pour sauvegarder les compétences et langues
+  const handleSave = () => {
     onSave({ skills, languages });
   };
 
   return (
-    <div className="resume-section">
-      <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <ChipIcon className="h-5 w-5" />
-        {title}
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-            <ChipIcon className="h-4 w-4" /> Compétences
-          </h3>
-          <div className="space-y-4">
-            {skills.map((skill) => (
-              <div
-                key={skill.id}
-                className="border rounded-md p-4 bg-gray-50 space-y-3 relative"
-              >
-                <div className="absolute right-4 top-4 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(skill.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                  <div className="drag-handle">
-                    <GripVertical className="h-5 w-5" />
-                  </div>
+    <div className="resume-section p-6 bg-white rounded-lg shadow">
+      <h2 className="text-2xl font-semibold mb-6">{title}</h2>
+      
+      {/* Section Compétences */}
+      <div className="mb-8">
+        <h3 className="text-xl font-medium mb-4">Compétences</h3>
+        
+        <div className="space-y-4 mb-4">
+          {skills.map(skill => (
+            <div key={skill.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded-md">
+              <Tag className="h-5 w-5 text-resume-primary" />
+              <div className="flex-1">
+                <div className="flex justify-between">
+                  <span className="font-medium">{skill.name}</span>
+                  <span className="text-sm text-gray-500">{skill.level}/5</span>
                 </div>
-
-                <div className="space-y-2 pr-16">
-                  <Label htmlFor={`skillName-${skill.id}`}>Compétence</Label>
-                  <Input
-                    id={`skillName-${skill.id}`}
-                    value={skill.name}
-                    onChange={(e) =>
-                      updateSkill(skill.id, "name", e.target.value)
-                    }
-                    placeholder="Ex: JavaScript, Photoshop, Gestion de projet..."
-                    required
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <Label htmlFor={`skillLevel-${skill.id}`}>Niveau</Label>
-                    <span className="text-sm text-gray-500">
-                      {skill.level === 1
-                        ? "Débutant"
-                        : skill.level === 2
-                        ? "Intermédiaire"
-                        : skill.level === 3
-                        ? "Compétent"
-                        : skill.level === 4
-                        ? "Avancé"
-                        : "Expert"}
-                    </span>
-                  </div>
-                  <Slider
-                    id={`skillLevel-${skill.id}`}
-                    value={[skill.level]}
-                    min={1}
-                    max={5}
-                    step={1}
-                    className="py-2"
-                    onValueChange={(value) =>
-                      updateSkill(skill.id, "level", value[0])
-                    }
-                  />
+                <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                  <div 
+                    className="bg-resume-primary h-1.5 rounded-full" 
+                    style={{ width: `${(skill.level / 5) * 100}%` }}
+                  ></div>
                 </div>
               </div>
-            ))}
-
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addSkill}
-              className="flex items-center gap-1"
-            >
-              <Plus className="h-4 w-4" /> Ajouter une compétence
-            </Button>
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-            <Languages className="h-4 w-4" /> Langues
-          </h3>
-          <div className="space-y-4">
-            {languages.map((language) => (
-              <div
-                key={language.id}
-                className="border rounded-md p-4 bg-gray-50 space-y-3 relative"
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => removeSkill(skill.id)}
+                className="p-0 h-8 w-8"
               >
-                <div className="absolute right-4 top-4 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => removeLanguage(language.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 className="h-5 w-5" />
-                  </button>
-                  <div className="drag-handle">
-                    <GripVertical className="h-5 w-5" />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pr-16">
-                  <Label htmlFor={`languageName-${language.id}`}>Langue</Label>
-                  <Input
-                    id={`languageName-${language.id}`}
-                    value={language.name}
-                    onChange={(e) =>
-                      updateLanguage(language.id, "name", e.target.value)
-                    }
-                    placeholder="Ex: Français, Anglais, Espagnol..."
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`languageLevel-${language.id}`}>Niveau</Label>
-                  <Select
-                    value={language.level}
-                    onValueChange={(value: any) =>
-                      updateLanguage(language.id, "level", value)
-                    }
-                  >
-                    <SelectTrigger id={`languageLevel-${language.id}`}>
-                      <SelectValue placeholder="Sélectionnez un niveau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Débutant</SelectItem>
-                      <SelectItem value="intermediate">Intermédiaire</SelectItem>
-                      <SelectItem value="advanced">Avancé</SelectItem>
-                      <SelectItem value="fluent">Courant</SelectItem>
-                      <SelectItem value="native">Langue maternelle</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <Trash className="h-4 w-4 text-gray-500" />
+              </Button>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex flex-col sm:flex-row items-end gap-3">
+          <div className="w-full sm:flex-1">
+            <Label htmlFor="skill-name">Nom de la compétence</Label>
+            <Input
+              id="skill-name"
+              value={newSkill.name}
+              onChange={e => setNewSkill({ ...newSkill, name: e.target.value })}
+              placeholder="Ex: JavaScript"
+            />
+          </div>
+          <div className="w-full sm:flex-1">
+            <Label htmlFor="skill-level">Niveau (1-5)</Label>
+            <Slider
+              id="skill-level"
+              min={1}
+              max={5}
+              step={1}
+              value={[newSkill.level]}
+              onValueChange={value => setNewSkill({ ...newSkill, level: value[0] })}
+              className="mt-2"
+            />
+          </div>
+          <Button 
+            onClick={addSkill} 
+            className="mt-2"
+            type="button"
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Ajouter
+          </Button>
+        </div>
+      </div>
+      
+      {/* Section Langues */}
+      <div>
+        <h3 className="text-xl font-medium mb-4">Langues</h3>
+        
+        <div className="space-y-4 mb-4">
+          {languages.map(language => (
+            <div key={language.id} className="flex items-center space-x-2 p-2 bg-gray-50 rounded-md">
+              <Tag className="h-5 w-5 text-resume-secondary" />
+              <div className="flex-1">
+                <div className="flex justify-between">
+                  <span className="font-medium">{language.name}</span>
+                  <span className="text-sm text-gray-500">
+                    {languageLevels.find(l => l.value === language.level)?.label}
+                  </span>
                 </div>
               </div>
-            ))}
-
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addLanguage}
-              className="flex items-center gap-1"
-            >
-              <Plus className="h-4 w-4" /> Ajouter une langue
-            </Button>
-          </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => removeLanguage(language.id)}
+                className="p-0 h-8 w-8"
+              >
+                <Trash className="h-4 w-4 text-gray-500" />
+              </Button>
+            </div>
+          ))}
         </div>
-
-        <Button type="submit" className="bg-resume-primary hover:bg-resume-secondary">
+        
+        <div className="flex flex-col sm:flex-row items-end gap-3">
+          <div className="w-full sm:flex-1">
+            <Label htmlFor="language-name">Langue</Label>
+            <Input
+              id="language-name"
+              value={newLanguage.name}
+              onChange={e => setNewLanguage({ ...newLanguage, name: e.target.value })}
+              placeholder="Ex: Anglais"
+            />
+          </div>
+          <div className="w-full sm:flex-1">
+            <Label htmlFor="language-level">Niveau</Label>
+            <Select 
+              value={newLanguage.level} 
+              onValueChange={value => setNewLanguage({ ...newLanguage, level: value as Language['level'] })}
+            >
+              <SelectTrigger id="language-level" className="mt-2">
+                <SelectValue placeholder="Sélectionner un niveau" />
+              </SelectTrigger>
+              <SelectContent>
+                {languageLevels.map(level => (
+                  <SelectItem key={level.value} value={level.value}>
+                    {level.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <Button 
+            onClick={addLanguage} 
+            className="mt-2"
+            type="button"
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Ajouter
+          </Button>
+        </div>
+      </div>
+      
+      <div className="mt-8 flex justify-end">
+        <Button 
+          onClick={handleSave}
+          className="bg-resume-primary hover:bg-resume-secondary"
+        >
           Enregistrer
         </Button>
-      </form>
+      </div>
     </div>
   );
 };

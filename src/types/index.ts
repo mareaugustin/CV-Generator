@@ -68,7 +68,36 @@ export interface ResumeData {
 // Types pour les props des composants
 export interface FormSectionProps {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+}
+
+export interface PersonalInfoFormProps {
+  title: string;
+  initialData: PersonalInfo;
+  onSave: (personalInfo: PersonalInfo) => void;
+  children?: React.ReactNode;
+}
+
+export interface ExperienceFormProps {
+  title: string;
+  initialData: Experience[];
+  onSave: (experiences: Experience[]) => void;
+  children?: React.ReactNode;
+}
+
+export interface EducationFormProps {
+  title: string;
+  initialData: Education[];
+  onSave: (educations: Education[]) => void;
+  children?: React.ReactNode;
+}
+
+export interface SkillsFormProps {
+  title: string;
+  initialSkills: Skill[];
+  initialLanguages: Language[];
+  onSave: (data: { skills: Skill[], languages: Language[] }) => void;
+  children?: React.ReactNode;
 }
 
 export interface ResumeBuilderProps {

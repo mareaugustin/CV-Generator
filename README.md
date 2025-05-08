@@ -3,6 +3,11 @@
 ## 📋 Aperçu du Projet
 
 Un générateur de CV moderne et intuitif permettant aux utilisateurs de créer, personnaliser et exporter leurs CV professionnels en quelques clics.
+Lien: https://cv-generator-beta-ten.vercel.app/
+
+![Macbook-Air-192 168 56 1](https://github.com/user-attachments/assets/e8e8be6e-6bd3-4378-a998-98f9a50c9c3d)
+
+![iPhone-13-PRO-192 168 56 1](https://github.com/user-attachments/assets/8ffe4a0a-8991-4316-8cfc-0c322e189a95)
 
 
 ## 🚀 Fonctionnalités Principales

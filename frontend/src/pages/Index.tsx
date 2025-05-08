@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "@/assets/logo/magilog.svg"
 import { Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
@@ -181,7 +182,7 @@ const Index = () => {
           {isAuthenticated ? (
             <>
               <Button size="lg" className="text-lg bg-blue-800 hover:bg-blue-600 px-8 py-6" >
-                <a href='/creer-cv' > Créer mon CV</a>
+                <Link to='/creer-cv' > Créer mon CV</Link>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </>

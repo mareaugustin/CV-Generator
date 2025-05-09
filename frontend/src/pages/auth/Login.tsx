@@ -63,7 +63,7 @@ const Login = () => {
         description: "Vous êtes maintenant connecté",
       });
       navigate("/");
-    } catch (error: any) {
+    } catch (error) {
       e.preventDefault();
       // Gestion des erreurs spécifiques
       if (error.response?.data?.message?.includes('utilisateur')) {

@@ -151,44 +151,54 @@ const Register = () => {
               )}
             </div>
             <div className="space-y-2 relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Mot de passe"
-                value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-                className={errors.password ? "border-red-500" : ""}
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Mot de passe"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  className={errors.password ? "border-red-500" : ""}
+                  required
+                />
+                {/* {errors.password && (
+                  <p className="text-red-500 text-sm">{errors.password}</p>
+                )} */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                </button>
+              </div>
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
+                  <p className="text-red-500 text-sm">{errors.password}</p>
               )}
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-              </button>
             </div>
             <div className="space-y-2 relative">
-              <Input
-                type={showPassword2 ? "text" : "password"}
-                placeholder="Confirmer le mot de passe"
-                value={formData.password2}
-                onChange={(e) => handleInputChange("password2", e.target.value)}
-                className={errors.password2 ? "border-red-500" : ""}
-                required
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword2 ? "text" : "password"}
+                  placeholder="Confirmer le mot de passe"
+                  value={formData.password2}
+                  onChange={(e) => handleInputChange("password2", e.target.value)}
+                  className={errors.password2 ? "border-red-500" : ""}
+                  required
+                />
+                {/* {errors.password2 && (
+                  <p className="text-red-500 text-sm">{errors.password2}</p>
+                )} */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword2(!showPassword2)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword2 ? <Eye size={20} /> : <EyeOff size={20} />}
+                </button>
+              </div>
               {errors.password2 && (
-                <p className="text-red-500 text-sm">{errors.password2}</p>
+                  <p className="text-red-500 text-sm">{errors.password2}</p>
               )}
-              <button
-                type="button"
-                onClick={() => setShowPassword2(!showPassword2)}
-                className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showPassword2 ? <Eye size={20} /> : <EyeOff size={20} />}
-              </button>
             </div>
             <Button
               type="submit"

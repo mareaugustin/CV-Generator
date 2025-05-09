@@ -8,9 +8,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { LogIn, Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({username: "",password: ""});
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
@@ -24,21 +29,27 @@ const Login = () => {
       password: "",
     };
 
-    if (!username.trim()) {
+    if (!formData.username.trim()) {
       newErrors.username = "Le nom d'utilisateur est requis";
       isValid = false;
     }
 
-    if (!password) {
+    if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
-    } else if (password.length < 6) {
+    } else if (formData.password.length < 6) {
       newErrors.password = "Le mot de passe doit contenir au moins 6 caractères";
       isValid = false;
     }
-
     setErrors(newErrors);
     return isValid;
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+    if (errors[field as keyof typeof errors]) {
+      setErrors({ ...errors, [field]: "" });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,18 +57,33 @@ const Login = () => {
     if (!validateForm()) return;
     setIsLoading(true);
     try {
-      await login(username, password);
+      await login(formData.username, formData.password);
       toast({
         title: "Connexion réussie",
         description: "Vous êtes maintenant connecté",
       });
       navigate("/");
-    } catch (error) {
-      toast({
-        title: "Erreur de connexion",
-        description: "Nom d'utilisateur ou mot de passe incorrect",
-        variant: "destructive",
-      });
+    } catch (error: any) {
+      // Gestion des erreurs spécifiques
+      if (error.response?.data?.message?.includes('utilisateur')) {
+        setErrors({
+          ...errors,
+          username: "Nom d'utilisateur incorrect",
+          password: ""
+        });
+      } else if (error.response?.data?.message?.includes('mot de passe')) {
+        setErrors({
+          ...errors,
+          password: "Mot de passe incorrect",
+          username: ""
+        });
+      } else {
+        toast({
+          title: "Erreur de connexion",
+          description: "Une erreur est survenue, veuillez réessayer",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -80,15 +106,9 @@ const Login = () => {
               <Input
                 type="text"
                 placeholder="Nom d'utilisateur"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  if (errors.username) {
-                    setErrors({ ...errors, username: "" });
-                  }
-                }}
-                className={errors.username ? "border-red-500" : ""
-                }
+                value={formData.username}
+                onChange={(e) => handleInputChange("username", e.target.value)}
+                className={errors.username ? "border-red-500" : ""}
                 required
               />
               {errors.username && (
@@ -100,20 +120,11 @@ const Login = () => {
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Mot de passe"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    if (errors.password) {
-                      setErrors({ ...errors, password: "" });
-                    }
-                  }}
-                  className={errors.password ? "border-red-500" : ""
-                  }
+                  value={formData.password}
+                  onChange={(e) => handleInputChange("password", e.target.value)}
+                  className={errors.password ? "border-red-500" : ""}
                   required
                 />
-                {/* {errors.password && (
-                  <p className="text-red-500 text-sm">{errors.password}</p>
-                )} */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}

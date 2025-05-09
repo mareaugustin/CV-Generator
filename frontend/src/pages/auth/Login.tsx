@@ -5,18 +5,45 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { LogIn } from "lucide-react";
+import { LogIn, Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({username: "",password: ""});
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {
+      username: "",
+      password: "",
+    };
+
+    if (!username.trim()) {
+      newErrors.username = "Le nom d'utilisateur est requis";
+      isValid = false;
+    }
+
+    if (!password) {
+      newErrors.password = "Le mot de passe est requis";
+      isValid = false;
+    } else if (password.length < 6) {
+      newErrors.password = "Le mot de passe doit contenir au moins 6 caractères";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setIsLoading(true);
     try {
       await login(username, password);
@@ -54,18 +81,45 @@ const Login = () => {
                 type="text"
                 placeholder="Nom d'utilisateur"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  if (errors.username) {
+                    setErrors({ ...errors, username: "" });
+                  }
+                }}
+                className={errors.username ? "border-red-500" : ""
+                }
                 required
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm">{errors.username}</p>
+              )}
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Mot de passe"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errors.password) {
+                    setErrors({ ...errors, password: "" });
+                  }
+                }}
+                className={errors.password ? "border-red-500" : ""
+                }
                 required
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
+              )}
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+              </button>
             </div>
             <Button
               type="submit"

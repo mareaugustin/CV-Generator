@@ -11,7 +11,7 @@ import CentreInteretForm from "../components/CentreInteretForm";
 import TemplateSelector from "../components/TemplateSelector";
 import ResumePreview from "../components/ResumePreview";
 import { generatePDF} from "@/lib/pdfGenerator";
-import { FileDown, FileText, Save, FileImage } from "lucide-react";
+import { FileDown, FileText, Save, FileImage, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { resumeService } from "@/services/api";
 import Header from "@/components/Header";
@@ -206,7 +206,7 @@ const ResumeBuilder = () => {
                 onClick={() => handleExport('pdf')}
                 disabled={isPending}
               >
-                <FileText className="h-4 w-4" />
+                <Download className="h-4 w-4" />
                 <span className="hidden md:inline">Pdf</span>
               </Button>
 

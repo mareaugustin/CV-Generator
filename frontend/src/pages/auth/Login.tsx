@@ -64,29 +64,33 @@ const Login = () => {
       });
       navigate("/");
     } catch (error) {
-      e.preventDefault();
+      setIsLoading(false);
       // Gestion des erreurs spécifiques
-      if (error.response?.data?.message?.includes('utilisateur')) {
+      if (error.response?.status === 401) {
+        // Erreur d'authentification
+        if (error.response.data?.message?.toLowerCase().includes('utilisateur')) {
+          setErrors({
+            username: "Nom d'utilisateur incorrect",
+            password: ""
+          });
+        } else {
+          setErrors({
+            username: "",
+            password: "Mot de passe incorrect"
+          });
+        }
+      } else {
+        // Autres erreurs
         setErrors({
-          ...errors,
-          username: "Nom d'utilisateur incorrect",
+          username: "",
           password: ""
         });
-      } else if (error.response?.data?.message?.includes('mot de passe')) {
-        setErrors({
-          ...errors,
-          password: "Mot de passe incorrect",
-          username: ""
-        });
-      } else {
         toast({
           title: "Erreur de connexion",
           description: "Une erreur est survenue, veuillez réessayer",
           variant: "destructive",
         });
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 

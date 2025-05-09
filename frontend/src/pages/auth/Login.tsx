@@ -38,7 +38,7 @@ const Login = () => {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
     } else if (formData.password.length < 6) {
-      newErrors.password = "Le mot de passe doit contenir au moins 6 caractères";
+      newErrors.password = "Mot de passe incorrect";
       isValid = false;
     }
     setErrors(newErrors);
@@ -57,40 +57,23 @@ const Login = () => {
     if (!validateForm()) return;
     setIsLoading(true);
     try {
-      await login(formData.username, formData.password);
+      await login(
+        formData.username,
+        formData.password,
+      );
       toast({
         title: "Connexion réussie",
-        description: "Vous êtes maintenant connecté",
+        description: "Vous êtes maintenant vous connecter",
       });
       navigate("/");
     } catch (error) {
+      toast({
+        title: "Erreur de connexion",
+        description: "Nom d'utilisateur ou mot de passe incorrect",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      // Gestion des erreurs spécifiques
-      if (error.response?.status === 401) {
-        // Erreur d'authentification
-        if (error.response.data?.message?.toLowerCase().includes('utilisateur')) {
-          setErrors({
-            username: "Nom d'utilisateur incorrect",
-            password: ""
-          });
-        } else {
-          setErrors({
-            username: "",
-            password: "Mot de passe incorrect"
-          });
-        }
-      } else {
-        // Autres erreurs
-        setErrors({
-          username: "",
-          password: ""
-        });
-        toast({
-          title: "Erreur de connexion",
-          description: "Une erreur est survenue, veuillez réessayer",
-          variant: "destructive",
-        });
-      }
     }
   };
 

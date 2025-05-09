@@ -64,6 +64,7 @@ const Login = () => {
       });
       navigate("/");
     } catch (error: any) {
+      e.preventDefault();
       // Gestion des erreurs spécifiques
       if (error.response?.data?.message?.includes('utilisateur')) {
         setErrors({

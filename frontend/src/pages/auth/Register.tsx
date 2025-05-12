@@ -57,12 +57,12 @@ const Register = () => {
     }
 
     // Validation du mot de passe
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;-_^`])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;:\-_^])[A-Za-z\d@$!%*?&,;:\-_^]{8,}$/
     if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
     } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères avec une majuscule,une minuscule, un chiffre et un caractère spécial (@ $ ! % * ? & , ; - _ ^ `). Ex: John123@";
+      newErrors.password = "Le mot de passe doit contenir : 8 caractères minimum, 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (@$!%*?&,;:-_^). Ex: John123@";
       isValid = false;
     }
 
@@ -131,11 +131,11 @@ const Register = () => {
                 placeholder="Nom d'utilisateur"
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
-                className={errors.username ? "border-red-500" : ""}
+                className={errors.username ? "border-red-600" : ""}
                 required
               />
               {errors.username && (
-                <p className="text-red-500 text-sm">{errors.username}</p>
+                <p className="text-red-600 text-sm">{errors.username}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -144,11 +144,11 @@ const Register = () => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={errors.email ? "border-red-500" : ""}
+                className={errors.email ? "border-red-600" : ""}
                 required
               />
               {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
+                <p className="text-red-600 text-sm">{errors.email}</p>
               )}
             </div>
             <div className="space-y-2 relative">
@@ -158,7 +158,7 @@ const Register = () => {
                   placeholder="Mot de passe"
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
-                  className={errors.password ? "border-red-500" : ""}
+                  className={errors.password ? "border-red-600" : ""}
                   required
                 />
                 {/* {errors.password && (
@@ -173,7 +173,7 @@ const Register = () => {
                 </button>
               </div>
               {errors.password && (
-                  <p className="text-red-500 text-[5px]">{errors.password}</p>
+                  <p className="text-red-600 text-[3px]">{errors.password}</p>
               )}
             </div>
             <div className="space-y-2 relative">
@@ -183,7 +183,7 @@ const Register = () => {
                   placeholder="Confirmer le mot de passe"
                   value={formData.password2}
                   onChange={(e) => handleInputChange("password2", e.target.value)}
-                  className={errors.password2 ? "border-red-500" : ""}
+                  className={errors.password2 ? "border-red-600" : ""}
                   required
                 />
                 {/* {errors.password2 && (
@@ -198,7 +198,7 @@ const Register = () => {
                 </button>
               </div>
               {errors.password2 && (
-                  <p className="text-red-500 text-sm">{errors.password2}</p>
+                  <p className="text-red-600 text-sm">{errors.password2}</p>
               )}
             </div>
             <Button

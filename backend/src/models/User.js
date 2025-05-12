@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20,
     trim: true,
-    match: /^[a-zA-Z]{2}(?!.*__)[a-zA-Z0-9_]*[a-zA-Z0-9]$/
+    match: /^[a-zA-Z]{3}(?!.*__)[a-zA-Z0-9_]*[a-zA-Z0-9]$/
   },
   email: {
     type: String,
@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
     maxlength: 100,
-    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;-_^`])[A-Za-z\d@$!%*?&]{8,}$/
+    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;:\-_^])[A-Za-z\d@$!%*?&,;:\-_^]{8,}$/
   }
 }, { timestamps: true });
 

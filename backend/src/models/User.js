@@ -6,16 +6,26 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    minlength: 3,
+    maxlength: 20,
+    trim: true,
+    match: /^[a-zA-Z]{2}(?!.*__)[a-zA-Z0-9_]*[a-zA-Z0-9]$/
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true,
+    lowercase: true,
+    match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 6,
+    maxlength: 100,
+    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
   }
 }, { timestamps: true });
 

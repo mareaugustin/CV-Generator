@@ -37,17 +37,18 @@ const Register = () => {
     };
 
     // Validation du nom d'utilisateur
+    const usernameRegex = /^[a-zA-Z]{3}(?!.*__)[a-zA-Z0-9_]*[a-zA-Z0-9]$/;
     if (!formData.username.trim()) {
       newErrors.username = "Le nom d'utilisateur est requis";
       isValid = false;
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Le nom d'utilisateur doit contenir au moins 3 caractères";
+    } else if (!usernameRegex.test(formData.username)) {
+      newErrors.username = "Nom d'utilisateur non valide. Exemple: john123,john,john_123,john_milot";
       isValid = false;
     }
 
     // Validation de l'email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email) {
+    if (!formData.email.trim()) {
       newErrors.email = "L'email est requis";
       isValid = false;
     } else if (!emailRegex.test(formData.email)) {
@@ -56,11 +57,12 @@ const Register = () => {
     }
 
     // Validation du mot de passe
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Le mot de passe doit contenir au moins 6 caractères";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères avec une majuscule,une minuscule, un chiffre et un caractère spécial. Ex: John123@";
       isValid = false;
     }
 
@@ -72,7 +74,6 @@ const Register = () => {
       newErrors.password2 = "Les mots de passe ne correspondent pas";
       isValid = false;
     }
-
     setErrors(newErrors);
     return isValid;
   };

@@ -67,6 +67,7 @@ const Login = () => {
       });
       navigate("/");
     } catch (error) {
+      e.stopPropagation();
       toast({
         title: "Erreur de connexion",
         description: "Nom d'utilisateur ou mot de passe incorrect",

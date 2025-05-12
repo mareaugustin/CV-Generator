@@ -37,9 +37,6 @@ const Login = () => {
     if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Mot de passe incorrect";
-      isValid = false;
     }
     setErrors(newErrors);
     return isValid;
@@ -54,6 +51,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({ username: "", password: "" });
     if (!validateForm()) return;
     setIsLoading(true);
     try {
@@ -66,14 +64,24 @@ const Login = () => {
         description: "Vous êtes maintenant vous connecter",
       });
       navigate("/");
-    } catch (error) {
-      // e.stopPropagation();
-      toast({
-        title: "Erreur de connexion",
-        description: "Nom d'utilisateur ou mot de passe incorrect",
-        variant: "destructive",
-      });
-      e.stopPropagation();
+    } catch (error: any) {
+      // Gestion des erreurs API
+      if (error.response?.data?.errors) {
+        setErrors({
+          username: error.response.data.errors.username?.[0] || "",
+          password: error.response.data.errors.password?.[0] || "",
+        });
+      } else {
+        setErrors({
+          username: "Identifiants incorrects",
+          password: "Identifiants incorrects",
+        });
+        toast({
+          title: "Erreur de connexion",
+          description: error.response?.data?.message || "Nom d'utilisateur ou mot de passe incorrect",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +99,7 @@ const Login = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div className="space-y-1">
               <Input
                 type="text"

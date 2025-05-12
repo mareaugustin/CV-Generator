@@ -62,7 +62,7 @@ const Register = () => {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
     } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "8 caractères min, 1 majuscule, 1 minuscule, 1 chiffre, 1 spécial (@$!%*?&,;:-_^)";
+      newErrors.password = "8 caractères min, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial (@$!%*?&,;:-_^)";
       isValid = false;
     }
 
@@ -114,13 +114,13 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-400 to-white">
-      <Card className="w-full max-w-md bg-gradient-to-br from-white via-blue-50 to-white shadow-lg">
+      <Card className="w-full max-w-md bg-gradient-to-br from-white via-blue-300 to-white shadow-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <User className="h-6 w-6" />Inscription
           </CardTitle>
           <CardDescription className="text-gray-600">
-            Créez un compte pour sauvegarder vos CV
+            Créez un compte pour créer un cv
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -173,10 +173,10 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform-translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/4 transform-translate-y-1/2 text-gray-500 hover:text-gray-700"
                   aria-label={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {errors.password && (
@@ -202,10 +202,10 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword2(!showPassword2)}
-                  className="absolute right-3 top-1/2 transform-translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/4 transform-translate-y-1/2 text-gray-500 hover:text-gray-700"
                   aria-label={showPassword2 ? "Cacher le mot de passe" : "Afficher le mot de passe"}
                 >
-                  {showPassword2 ? <EyeOff size={18} /> : <EyeOff size={18} />}
+                  {showPassword2 ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {errors.password2 && (

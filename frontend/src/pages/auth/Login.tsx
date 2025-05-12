@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { LogIn, Eye, EyeOff } from "lucide-react";
+import { LogIn, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -67,12 +67,13 @@ const Login = () => {
       });
       navigate("/");
     } catch (error) {
-      e.stopPropagation();
+      // e.stopPropagation();
       toast({
         title: "Erreur de connexion",
         description: "Nom d'utilisateur ou mot de passe incorrect",
         variant: "destructive",
       });
+      e.stopPropagation();
     } finally {
       setIsLoading(false);
     }
@@ -80,61 +81,68 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-400 to-white">
-      <Card className="w-[350px] bg-gradient-to-br from-white via-blue-300 to-white">
+      <Card className="w-full max-w-md bg-gradient-to-br from-white via-blue-300 to-white shadow-lg">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-2xl">
             <LogIn className="h-6 w-6" />Connexion
           </CardTitle>
-          <CardDescription>
-            Connectez-vous pour créer et gérer vos CV
+          <CardDescription className="text-gray-600">
+            Connectez-vous pour gérer vos CV
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Input
                 type="text"
                 placeholder="Nom d'utilisateur"
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
-                className={errors.username ? "border-red-500" : ""}
+                className={errors.username ? "border-red-500 focus-visible:ring-red-300" : ""}
                 required
               />
               {errors.username && (
-                <p className="text-red-500 text-sm">{errors.username}</p>
+                <div className="flex items-start gap-1 text-red-600 text-xs mt-1">
+                  <AlertCircle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                  <span>{errors.username}</span>
+                </div>
               )}
             </div>
-            <div className="space-y-2 relative">
+            <div className="space-y-1">
               <div className="relative">
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Mot de passe"
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
-                  className={errors.password ? "border-red-500" : ""}
+                  className={errors.password ? "border-red-500 focus-visible:ring-red-300" : ""}
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/4 transform-translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  aria-label={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
                 >
-                  {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
+                <div className="flex items-start gap-1 text-red-600 text-xs mt-1">
+                  <AlertCircle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                  <span>{errors.password}</span>
+                </div>
               )}
             </div>
             <Button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-500"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white"
               disabled={isLoading}
             >
-              {isLoading ? "Connexion..." : "Se connecter"}
+              {isLoading ? "Connexion en cours..." : "Se connecter"}
             </Button>
             <p className="text-center text-sm">
-              Pas encore de compte ? 
+              Pas encore de compte ?{" "}
               <a href="/register" className="text-blue-600 font-semibold hover:underline">
                 S'inscrire
               </a>

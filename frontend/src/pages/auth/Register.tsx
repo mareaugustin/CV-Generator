@@ -57,12 +57,12 @@ const Register = () => {
     }
 
     // Validation du mot de passe
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;-_^`])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
       newErrors.password = "Le mot de passe est requis";
       isValid = false;
     } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères avec une majuscule,une minuscule, un chiffre et un caractère spécial. Ex: John123@";
+      newErrors.password = "Le mot de passe doit contenir au moins 8 caractères avec une majuscule,une minuscule, un chiffre et un caractère spécial (@ $ ! % * ? & , ; - _ ^ `). Ex: John123@";
       isValid = false;
     }
 
@@ -173,7 +173,7 @@ const Register = () => {
                 </button>
               </div>
               {errors.password && (
-                  <p className="text-red-500 text-sm">{errors.password}</p>
+                  <p className="text-red-500 text-[5px]">{errors.password}</p>
               )}
             </div>
             <div className="space-y-2 relative">

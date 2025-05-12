@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
     maxlength: 100,
-    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&,;-_^`])[A-Za-z\d@$!%*?&]{8,}$/
   }
 }, { timestamps: true });
 
